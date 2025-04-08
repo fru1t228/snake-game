@@ -4,45 +4,30 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     flex-direction: column;
   }
   
   canvas {
     border: 2px solid #fff;
+    margin-top: 20px;
   }
   
-  /* Кнопки управления для мобильных */
   #controls {
     margin-top: 20px;
-    z-index: 10;
   }
   
-  #controls .row {
+  .row {
     text-align: center;
   }
   
-  #controls button {
+  button {
     font-size: 24px;
     width: 60px;
     height: 60px;
     margin: 5px;
-    border: none;
-    border-radius: 15px;
-    background-color: #444;
+    background-color: #333;
     color: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-    transition: background-color 0.2s;
-  }
-  
-  #controls button:active {
-    background-color: #666;
-  }
-  
-  /* Скрыть кнопки на десктопе */
-  @media (min-width: 800px) {
-    .mobile-only {
-      display: none;
-    }
+    border: none;
+    border-radius: 10px;
   }
   
