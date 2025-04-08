@@ -11,11 +11,29 @@ window.onload = () => {
     let dx = box, dy = 0;
   
     document.addEventListener("keydown", (event) => {
-      if (event.key === "ArrowLeft" && dx === 0) dx = -box, dy = 0;
-      if (event.key === "ArrowRight" && dx === 0) dx = box, dy = 0;
-      if (event.key === "ArrowUp" && dy === 0) dx = 0, dy = -box;
-      if (event.key === "ArrowDown" && dy === 0) dx = 0, dy = box;
+      if (event.key === "ArrowLeft" && dx === 0) {
+        dx = -box; dy = 0;
+      } else if (event.key === "ArrowRight" && dx === 0) {
+        dx = box; dy = 0;
+      } else if (event.key === "ArrowUp" && dy === 0) {
+        dx = 0; dy = -box;
+      } else if (event.key === "ArrowDown" && dy === 0) {
+        dx = 0; dy = box;
+      }
     });
+  
+    // Функция для мобильных кнопок
+    window.move = function(dir) {
+      if (dir === "left" && dx === 0) {
+        dx = -box; dy = 0;
+      } else if (dir === "right" && dx === 0) {
+        dx = box; dy = 0;
+      } else if (dir === "up" && dy === 0) {
+        dx = 0; dy = -box;
+      } else if (dir === "down" && dy === 0) {
+        dx = 0; dy = box;
+      }
+    };
   
     function draw() {
       ctx.fillStyle = "#000";
