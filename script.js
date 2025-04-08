@@ -70,6 +70,17 @@ window.onload = () => {
       snake.unshift(head);
     }
   
-    setInterval(draw, 100);
+    setInterval(draw, 250);
   };
+  function move(dir) {
+    if (dir === "left" && dx === 0) {
+      dx = -box; dy = 0;
+    } else if (dir === "right" && dx === 0) {
+      dx = box; dy = 0;
+    } else if (dir === "up" && dy === 0) {
+      dx = 0; dy = -box;
+    } else if (dir === "down" && dy === 0) {
+      dx = 0; dy = box;
+    }
+  }
   
