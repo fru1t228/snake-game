@@ -8,8 +8,12 @@ let food = {
   y: Math.floor(Math.random() * 20) * box
 };
 let dx = box, dy = 0;
+let gameLoop = null;
+let isGameOver = false;
 
 document.addEventListener("keydown", (e) => {
+  if (isGameOver) return;
+  
   if (e.key === "ArrowLeft" && dx === 0) { dx = -box; dy = 0; }
   else if (e.key === "ArrowRight" && dx === 0) { dx = box; dy = 0; }
   else if (e.key === "ArrowUp" && dy === 0) { dx = 0; dy = -box; }
@@ -17,6 +21,8 @@ document.addEventListener("keydown", (e) => {
 });
 
 function move(dir) {
+  if (isGameOver) return;
+  
   if (dir === "left" && dx === 0) { dx = -box; dy = 0; }
   else if (dir === "right" && dx === 0) { dx = box; dy = 0; }
   else if (dir === "up" && dy === 0) { dx = 0; dy = -box; }
@@ -24,6 +30,8 @@ function move(dir) {
 }
 
 function draw() {
+  if (isGameOver) return;
+  
   ctx.fillStyle = "#000";
   ctx.fillRect(0, 0, 400, 400);
 
@@ -59,6 +67,9 @@ function draw() {
 }
 
 function showGameOver() {
+  isGameOver = true;
+  clearInterval(gameLoop);
+  
   ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
   ctx.fillRect(0, 0, 400, 400);
   
@@ -68,12 +79,13 @@ function showGameOver() {
   ctx.fillText("Game Over", 200, 180);
   
   ctx.font = "20px Arial";
-  ctx.fillText("Tap to restart", 200, 220);
+  ctx.fillText("Нажмите для перезапуска", 200, 220);
   
   canvas.addEventListener("click", restartGame, { once: true });
 }
 
 function restartGame() {
+  isGameOver = false;
   snake = [{ x: 10 * box, y: 10 * box }];
   food = {
     x: Math.floor(Math.random() * 20) * box,
@@ -81,7 +93,12 @@ function restartGame() {
   };
   dx = box;
   dy = 0;
+  
+  if (gameLoop) {
+    clearInterval(gameLoop);
+  }
   gameLoop = setInterval(draw, 300);
 }
 
-let gameLoop = setInterval(draw, 300);
+// Запускаем игру
+restartGame();
