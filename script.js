@@ -2,6 +2,17 @@ const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 const scoreElement = document.getElementById("score");
 
+// Создаем overlay canvas для Game Over экрана
+const overlayCanvas = document.createElement('canvas');
+overlayCanvas.width = 400;
+overlayCanvas.height = 400;
+overlayCanvas.style.position = 'absolute';
+overlayCanvas.style.top = canvas.offsetTop + 'px';
+overlayCanvas.style.left = canvas.offsetLeft + 'px';
+overlayCanvas.style.pointerEvents = 'none';
+document.getElementById('game-container').appendChild(overlayCanvas);
+const overlayCtx = overlayCanvas.getContext("2d");
+
 const box = 20;
 let snake = [{ x: 10 * box, y: 10 * box }];
 let food = {
@@ -116,24 +127,29 @@ function showGameOver() {
   isGameOver = true;
   clearInterval(gameLoop);
   
-  // Создаем эффект затемнения
-  ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
-  ctx.fillRect(0, 0, 400, 400);
+  // Очищаем overlay canvas
+  overlayCtx.clearRect(0, 0, 400, 400);
   
-  // Рисуем текст Game Over с эффектом свечения
-  ctx.fillStyle = "#fff";
-  ctx.font = "bold 40px Arial";
-  ctx.textAlign = "center";
-  ctx.shadowColor = "#ff0000";
-  ctx.shadowBlur = 10;
-  ctx.fillText("Game Over", 200, 180);
-  ctx.shadowBlur = 0;
+  // Создаем эффект затемнения на overlay
+  overlayCtx.fillStyle = "rgba(0, 0, 0, 0.75)";
+  overlayCtx.fillRect(0, 0, 400, 400);
   
-  ctx.font = "20px Arial";
-  ctx.fillText(`Ваш счет: ${score}`, 200, 220);
-  ctx.fillText("Нажмите для перезапуска", 200, 250);
+  // Рисуем текст Game Over с эффектом свечения на overlay
+  overlayCtx.fillStyle = "#fff";
+  overlayCtx.font = "bold 40px Arial";
+  overlayCtx.textAlign = "center";
+  overlayCtx.shadowColor = "#ff0000";
+  overlayCtx.shadowBlur = 10;
+  overlayCtx.fillText("Game Over", 200, 180);
+  overlayCtx.shadowBlur = 0;
   
-  canvas.addEventListener("click", restartGame, { once: true });
+  overlayCtx.font = "20px Arial";
+  overlayCtx.fillText(`Ваш счет: ${score}`, 200, 220);
+  overlayCtx.fillText("Нажмите для перезапуска", 200, 250);
+  
+  // Включаем обработку кликов на overlay
+  overlayCanvas.style.pointerEvents = 'auto';
+  overlayCanvas.addEventListener("click", restartGame, { once: true });
 }
 
 function restartGame() {
@@ -147,6 +163,10 @@ function restartGame() {
   dy = 0;
   score = 0;
   scoreElement.textContent = "Очки: 0";
+  
+  // Очищаем overlay
+  overlayCtx.clearRect(0, 0, 400, 400);
+  overlayCanvas.style.pointerEvents = 'none';
   
   if (gameLoop) {
     clearInterval(gameLoop);
