@@ -12,8 +12,13 @@ function resizeCanvas() {
   
   canvas.width = boxSize;
   canvas.height = boxSize;
+  canvas.style.width = boxSize + 'px';
+  canvas.style.height = boxSize + 'px';
+  
   overlayCanvas.width = boxSize;
   overlayCanvas.height = boxSize;
+  overlayCanvas.style.width = boxSize + 'px';
+  overlayCanvas.style.height = boxSize + 'px';
   
   // Обновляем позицию overlay
   overlayCanvas.style.top = canvas.offsetTop + 'px';
@@ -103,8 +108,11 @@ function draw(timestamp) {
   
   lastTime = timestamp;
   
-  // Очищаем canvas с эффектом затемнения
-  ctx.fillStyle = "rgba(15, 15, 26, 0.1)";
+  // Очищаем canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // Рисуем фон
+  ctx.fillStyle = "#0f0f1a";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   // Рисуем сетку
