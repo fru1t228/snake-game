@@ -24,6 +24,8 @@ let gameLoop = null;
 let isGameOver = false;
 let score = 0;
 let foodPulse = 0;
+let lastTime = 0;
+const gameSpeed = 150; // Скорость игры в миллисекундах
 
 // Цвета для градиента змейки
 const snakeColors = [
@@ -50,8 +52,19 @@ function move(dir) {
   else if (dir === "down" && dy === 0) { dx = 0; dy = box; }
 }
 
-function draw() {
+function draw(timestamp) {
   if (isGameOver) return;
+  
+  // Используем requestAnimationFrame для плавного движения
+  if (!lastTime) lastTime = timestamp;
+  const deltaTime = timestamp - lastTime;
+  
+  if (deltaTime < gameSpeed) {
+    requestAnimationFrame(draw);
+    return;
+  }
+  
+  lastTime = timestamp;
   
   // Очищаем canvas с эффектом затемнения
   ctx.fillStyle = "rgba(15, 15, 26, 0.1)";
@@ -103,6 +116,7 @@ function draw() {
   if (head.x === food.x && head.y === food.y) {
     score += 10;
     scoreElement.textContent = `Очки: ${score}`;
+    // Не удаляем хвост при поедании еды
     food = {
       x: Math.floor(Math.random() * 20) * box,
       y: Math.floor(Math.random() * 20) * box
@@ -121,6 +135,7 @@ function draw() {
   }
 
   snake.unshift(head);
+  requestAnimationFrame(draw);
 }
 
 function showGameOver() {
@@ -163,6 +178,7 @@ function restartGame() {
   dy = 0;
   score = 0;
   scoreElement.textContent = "Очки: 0";
+  lastTime = 0;
   
   // Очищаем overlay
   overlayCtx.clearRect(0, 0, 400, 400);
@@ -171,7 +187,7 @@ function restartGame() {
   if (gameLoop) {
     clearInterval(gameLoop);
   }
-  gameLoop = setInterval(draw, 300);
+  requestAnimationFrame(draw);
 }
 
 // Запускаем игру
