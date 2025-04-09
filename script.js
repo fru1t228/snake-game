@@ -2,43 +2,22 @@ const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 const scoreElement = document.getElementById("score");
 
-// Адаптивный размер canvas для мобильных устройств
-function resizeCanvas() {
-  const maxWidth = window.innerWidth - 40; // Оставляем отступы по 20px с каждой стороны
-  const maxHeight = window.innerHeight - 200; // Оставляем место для кнопок и счета
-  
-  const size = Math.min(maxWidth, maxHeight, 400);
-  const boxSize = Math.floor(size / 20) * 20; // Округляем до размера, кратного 20
-  
-  canvas.width = boxSize;
-  canvas.height = boxSize;
-  canvas.style.width = boxSize + 'px';
-  canvas.style.height = boxSize + 'px';
-  
-  overlayCanvas.width = boxSize;
-  overlayCanvas.height = boxSize;
-  overlayCanvas.style.width = boxSize + 'px';
-  overlayCanvas.style.height = boxSize + 'px';
-  
-  // Обновляем позицию overlay
-  overlayCanvas.style.top = canvas.offsetTop + 'px';
-  overlayCanvas.style.left = canvas.offsetLeft + 'px';
-  
-  return boxSize / 20; // Возвращаем новый размер ячейки
-}
-
 // Создаем overlay canvas для Game Over экрана
 const overlayCanvas = document.createElement('canvas');
+overlayCanvas.width = 400;
+overlayCanvas.height = 400;
 overlayCanvas.style.position = 'absolute';
+overlayCanvas.style.top = canvas.offsetTop + 'px';
+overlayCanvas.style.left = canvas.offsetLeft + 'px';
 overlayCanvas.style.pointerEvents = 'none';
 document.getElementById('game-container').appendChild(overlayCanvas);
 const overlayCtx = overlayCanvas.getContext("2d");
 
-let box = resizeCanvas(); // Инициализируем размер ячейки
+const box = 20;
 let snake = [{ x: 10 * box, y: 10 * box }];
 let food = {
-  x: Math.floor(Math.random() * (canvas.width/box)) * box,
-  y: Math.floor(Math.random() * (canvas.height/box)) * box
+  x: Math.floor(Math.random() * 20) * box,
+  y: Math.floor(Math.random() * 20) * box
 };
 let dx = box, dy = 0;
 let gameLoop = null;
@@ -47,27 +26,6 @@ let score = 0;
 let foodPulse = 0;
 let lastTime = 0;
 const gameSpeed = 150; // Скорость игры в миллисекундах
-
-// Обработчик изменения размера окна
-window.addEventListener('resize', () => {
-  const newBox = resizeCanvas();
-  // Масштабируем позиции змейки и еды
-  const scale = newBox / box;
-  box = newBox;
-  
-  snake = snake.map(segment => ({
-    x: Math.round(segment.x * scale),
-    y: Math.round(segment.y * scale)
-  }));
-  
-  food = {
-    x: Math.round(food.x * scale),
-    y: Math.round(food.y * scale)
-  };
-  
-  dx = box;
-  dy = 0;
-});
 
 // Цвета для градиента змейки
 const snakeColors = [
@@ -109,23 +67,23 @@ function draw(timestamp) {
   lastTime = timestamp;
   
   // Очищаем canvas
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, 400, 400);
   
   // Рисуем фон
   ctx.fillStyle = "#0f0f1a";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillRect(0, 0, 400, 400);
 
   // Рисуем сетку
   ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
   ctx.lineWidth = 1;
-  for (let i = 0; i < canvas.width; i += box) {
+  for (let i = 0; i < 400; i += box) {
     ctx.beginPath();
     ctx.moveTo(i, 0);
-    ctx.lineTo(i, canvas.height);
+    ctx.lineTo(i, 400);
     ctx.stroke();
     ctx.beginPath();
     ctx.moveTo(0, i);
-    ctx.lineTo(canvas.width, i);
+    ctx.lineTo(400, i);
     ctx.stroke();
   }
 
@@ -137,7 +95,7 @@ function draw(timestamp) {
     
     // Добавляем свечение
     ctx.shadowColor = snakeColors[colorIndex];
-    ctx.shadowBlur = 10;
+    ctx.shadowBlur = 5;
     ctx.fillRect(s.x, s.y, box, box);
     ctx.shadowBlur = 0;
   });
@@ -152,7 +110,7 @@ function draw(timestamp) {
   
   // Добавляем свечение для еды
   ctx.shadowColor = "#ff0000";
-  ctx.shadowBlur = 15;
+  ctx.shadowBlur = 10;
   ctx.fill();
   ctx.shadowBlur = 0;
 
@@ -163,16 +121,16 @@ function draw(timestamp) {
     scoreElement.textContent = `Очки: ${score}`;
     // Не удаляем хвост при поедании еды
     food = {
-      x: Math.floor(Math.random() * (canvas.width/box)) * box,
-      y: Math.floor(Math.random() * (canvas.height/box)) * box
+      x: Math.floor(Math.random() * 20) * box,
+      y: Math.floor(Math.random() * 20) * box
     };
   } else {
     snake.pop();
   }
 
   if (
-    head.x < 0 || head.x >= canvas.width ||
-    head.y < 0 || head.y >= canvas.height ||
+    head.x < 0 || head.x >= 400 ||
+    head.y < 0 || head.y >= 400 ||
     snake.some(s => s.x === head.x && s.y === head.y)
   ) {
     showGameOver();
@@ -188,11 +146,11 @@ function showGameOver() {
   clearInterval(gameLoop);
   
   // Очищаем overlay canvas
-  overlayCtx.clearRect(0, 0, canvas.width, canvas.height);
+  overlayCtx.clearRect(0, 0, 400, 400);
   
   // Создаем эффект затемнения на overlay
   overlayCtx.fillStyle = "rgba(0, 0, 0, 0.75)";
-  overlayCtx.fillRect(0, 0, canvas.width, canvas.height);
+  overlayCtx.fillRect(0, 0, 400, 400);
   
   // Рисуем текст Game Over с эффектом свечения на overlay
   overlayCtx.fillStyle = "#fff";
@@ -200,12 +158,12 @@ function showGameOver() {
   overlayCtx.textAlign = "center";
   overlayCtx.shadowColor = "#ff0000";
   overlayCtx.shadowBlur = 10;
-  overlayCtx.fillText("Game Over", canvas.width/2, canvas.height/2);
+  overlayCtx.fillText("Game Over", 200, 180);
   overlayCtx.shadowBlur = 0;
   
   overlayCtx.font = "20px Arial";
-  overlayCtx.fillText(`Ваш счет: ${score}`, canvas.width/2, canvas.height/2 + 40);
-  overlayCtx.fillText("Нажмите для перезапуска", canvas.width/2, canvas.height/2 + 80);
+  overlayCtx.fillText(`Ваш счет: ${score}`, 200, 220);
+  overlayCtx.fillText("Нажмите для перезапуска", 200, 250);
   
   // Включаем обработку кликов на overlay
   overlayCanvas.style.pointerEvents = 'auto';
@@ -216,8 +174,8 @@ function restartGame() {
   isGameOver = false;
   snake = [{ x: 10 * box, y: 10 * box }];
   food = {
-    x: Math.floor(Math.random() * (canvas.width/box)) * box,
-    y: Math.floor(Math.random() * (canvas.height/box)) * box
+    x: Math.floor(Math.random() * 20) * box,
+    y: Math.floor(Math.random() * 20) * box
   };
   dx = box;
   dy = 0;
@@ -226,7 +184,7 @@ function restartGame() {
   lastTime = 0;
   
   // Очищаем overlay
-  overlayCtx.clearRect(0, 0, canvas.width, canvas.height);
+  overlayCtx.clearRect(0, 0, 400, 400);
   overlayCanvas.style.pointerEvents = 'none';
   
   if (gameLoop) {
