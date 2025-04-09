@@ -1,100 +1,79 @@
 body {
     margin: 0;
-    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    background: #000;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     font-family: 'Arial', sans-serif;
-    padding: 20px;
-    box-sizing: border-box;
-    overflow: hidden;
-  }
-  
-  #game-container {
-    position: relative;
+}
+
+#game-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  
-  canvas {
-    border: 4px solid #2a2a3a;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    background-color: #0f0f1a;
-    width: 400px;
-    height: 400px;
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
-  }
-  
-  #controls {
+}
+
+canvas {
+    border: 2px solid #fff;
+    background-color: #000;
+}
+
+#controls {
     margin-top: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
-  }
-  
-  .row {
+}
+
+.row {
     display: flex;
     gap: 10px;
     justify-content: center;
-  }
-  
-  button {
+}
+
+button {
     font-size: 24px;
-    width: 70px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
     margin: 5px;
-    background: linear-gradient(145deg, #2a2a3a, #1a1a2a);
+    background-color: #333;
     color: white;
     border: none;
-    border-radius: 15px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-  }
-  
-  button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-  }
-  
-  button:active {
-    transform: translateY(1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-  
-  #score {
+}
+
+button:active {
+    background-color: #444;
+}
+
+#score {
     color: white;
     font-size: 24px;
     margin-bottom: 20px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  }
-  
-  /* Медиа-запросы для мобильных устройств */
-  @media (max-width: 480px) {
+}
+
+/* Медиа-запросы для мобильных устройств */
+@media (max-width: 480px) {
     body {
-      padding: 10px;
+        padding: 10px;
     }
     
     button {
-      width: 60px;
-      height: 60px;
-      font-size: 20px;
+        width: 60px;
+        height: 60px;
+        font-size: 20px;
     }
     
     #score {
-      font-size: 20px;
-      margin-bottom: 10px;
+        font-size: 20px;
+        margin-bottom: 10px;
     }
     
     #controls {
-      margin-top: 10px;
+        margin-top: 10px;
     }
-  }
+}
   
